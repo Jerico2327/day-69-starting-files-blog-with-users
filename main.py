@@ -11,9 +11,11 @@ from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Text, ForeignKey
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
+
 # Import your forms from the forms.py
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
-from wtforms import SubmitField
+import os
+from dotenv import load_dotenv
 
 
 '''
@@ -29,8 +31,10 @@ pip3 install -r requirements.txt
 This will install the packages from the requirements.txt for this project.
 '''
 
+load_dotenv()
+
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.getenv('FLASK_KEY')
 Bootstrap5(app)
 ckeditor = CKEditor(app)
 
@@ -45,7 +49,7 @@ class Base(DeclarativeBase):
     pass
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DB_URI', 'sqlite:///posts.db')
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
@@ -180,8 +184,6 @@ def show_post(post_id):
             flash("Please log in first")
             return redirect(url_for("login"))
     commenters = db.session.execute(db.select(Comment)).scalars().all()
-    for c in commenters:
-        print(c.comment_author.name)
     return render_template("post.html", post=requested_post, form=comment_form, all_comments=requested_post.comments, commenter=commenters)
 
 
@@ -261,4 +263,4 @@ def reset_db():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=False, port=5000)

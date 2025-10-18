@@ -45,9 +45,15 @@
           {% for comment in all_comments %}
           <ul class="commentList">
             <li>
+
               <div class="commenterImage">
+                {% if comment.comment_author.name == "Coco"%}
+                <img src="../static/assets/img/Dog2.jpg" />
+                {% else %}
                 <img src="../static/assets/img/default-profile.jpg" />
+                {% endif %}
               </div>
+
               <div class="commentText">
                 {{ comment.text | safe }}
                 <span class="date sub-text">{{ comment.comment_author.name }}</span>
