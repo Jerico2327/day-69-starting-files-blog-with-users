@@ -37,8 +37,6 @@
 
         <!-- Comments Area -->
         <!-- TODO: Add a CKEditor for commenting below -->
-
-        {{ ckeditor.load() }}
         {{ render_form(form) }}
         <div class="comment">
           <!-- TODO: Show all the comments on a post -->
@@ -56,7 +54,7 @@
 
               <div class="commentText">
                 {{ comment.text | safe }}
-                <span class="date sub-text">{{ comment.comment_author.name }}</span>
+                <div class="date sub-text">{{ comment.comment_author.name }}</div>
               </div>
             </li>
           </ul>
